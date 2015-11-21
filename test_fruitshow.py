@@ -3,9 +3,8 @@
 """
 Functional and unit tests.
 """
-from abc import ABCMeta
-
 import pytest
+from abc import ABCMeta
 from app import flask
 from app.models import *
 from pyquery import PyQuery
@@ -59,15 +58,17 @@ class TestFunctional(AbstractTest):
 
     @classmethod
     def setup_class(cls):
-        for i in range(0, 200):
+        for i in range(0, 220):
             topic = Topic(subject=u'Topic %i' % i)
-            for j in range(0, 5):
-                post = Post(message=u'This is message %i' % j, topic_id=topic.id, ip_address=u'127.0.0.1')
-                if not topic.first_post_id:
-                    topic.first_post_id = post.id
-                topic.posts.append(post)
+            post = Post(message=u'First Post!', ip_address=u'127.0.0.1')
             db.session.add(topic)
-        db.session.commit()
+            db.session.add(post)
+            topic.first_post = post
+            post.topic = topic
+            for j in range(0, 25):
+                post = Post(message=u'Post %i' % j, ip_address=u'127.0.0.1')
+                post.topic = topic
+            db.session.commit()
 
     @classmethod
     def teardown_class(cls):

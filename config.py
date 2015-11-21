@@ -13,3 +13,4 @@ SQLALCHEMY_DATABASE_URI = 'postgresql+pg8000://fruitshow:fruitshow@localhost:543
 
 # Don't change
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+SQLALCHEMY_TRACK_MODIFICATIONS = True
