@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% from "_macros.html" import render_field %}
+{% block content %}
+
+    <section>
+        <header><h3 id="{{ topic.id }}">{{ topic.subject }}</h3></header>
+        {% for post in topic.posts %}
+            <article>
+                {{ post.message }}
+                <footer>
+                    <p style="font-style:italic">
+                        {{ post.name }}<br />
+                        {{ post.date_created.strftime('%Y-%m-%d %H:%m') }}<br />
+                    </p>
+                </footer>
+            </article>
+        {% endfor %}
+        <form method="POST" action="{{ url_for('view_topic', topic_id=topic.id) }}">
+        <fieldset>
+            <dl>
+                {{ render_field(form.message) }}
+                {{ render_field(form.name) }}
+                {{ render_field(form.email) }}
+            </dl>
+            <button type="submit">Submit</button>
+        </fieldset>
+    </form>
+    </section>
+
+{% endblock %}
