@@ -65,7 +65,7 @@ class TestFunctional(AbstractTest):
             topic.first_post = post
             post.topic = topic
             for j in range(1, 26):
-                post = Post(message=u'Post %i' % j, ip_address=u'127.0.0.1', name=u'Poster %i' %j,
+                post = Post(message=u'Post %i' % j, ip_address=u'127.0.0.1', name=u'Poster %i' % j,
                             email=u'email%i@email' % j)
                 post.topic = topic
             db.session.add(topic)
@@ -82,6 +82,34 @@ class TestFunctional(AbstractTest):
         lists = self.get_element(result.data, 'li')
         assert len(lists) == 100
 
-    def text_create_new_thread(self, client):
-        result = client.post('/topic/new', follow_redirects=True)
+    def test_create_new_thread(self, client):
+        data = {
+            'subject': u'A subject',
+            'message': u'A message',
+            'name': u'A name'
+        }
+        result = client.post('/topic/new', follow_redirects=True, data=data, environ_base={'REMOTE_ADDR': '127.0.0.1'})
         assert result.status_code == 200
+        article = self.get_element(result.data, 'article')[0]
+        assert u'A message' in article.text
+
+    def test_add_new_post_to_topic(self, client):
+        data = {
+            'subject': u'A subject',
+            'message': u'A message',
+            'name': u'A name'
+        }
+        result = client.post('/topic/new', follow_redirects=True, data=data, environ_base={'REMOTE_ADDR': '127.0.0.1'})
+        assert result.status_code == 200
+        h3 = self.get_element(result.data, 'h3')
+        topic_id = h3.attr('id')
+        data = {
+            'message': u'A second message',
+            'name': u'A second name'
+        }
+        import ipdb; ipdb.set_trace()
+        result = client.post('/topic/%s' % topic_id, follow_redirects=True, data=data,
+                             environ_base={'REMOTE_ADDR': '127.0.0.1'})
+        assert result.status_code == 200
+        article = self.get_element(result.data, 'article')[1]
+        assert u'A second message' in article.text

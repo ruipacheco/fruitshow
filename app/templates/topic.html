@@ -4,7 +4,7 @@
 {% block content %}
 
     <section>
-        <header><h3 id="{{ topic.id }}">{{ topic.subject }}</h3></header>
+        <h3 id="{{ topic.id }}">{{ topic.subject }}</h3>
         {% for post in topic.posts %}
             <article>
                 {{ post.message }}
