@@ -4,6 +4,7 @@ from app import db
 from sqlalchemy.dialects.postgresql import INET
 from sqlalchemy_utils import EmailType
 
+
 __author__ = 'ruipacheco'
 __version__ = '0.1'
 
@@ -23,7 +24,8 @@ class Topic(db.Model):
 
     def __repr__(self):
         return u"<%s 'id':%i, 'subject':%s, 'first_post_id':%i, 'date_created':%s>" % (self.__class__.__name__,
-                                                                                       self.id, self.subject,
+                                                                                       self.id,
+                                                                                       self.subject,
                                                                                        self.first_post_id,
                                                                                        self.date_created)
 
