@@ -1,13 +1,39 @@
 # -*- coding: utf-8 -*-
 
-from app import flask
-from models import *
-from forms import TopicForm, PostForm
-from flask import render_template, abort, request, redirect, url_for
+import time
+from urlparse import urlparse
 
+from app import flask
+from flask import render_template, abort, request, redirect, url_for
+from forms import TopicForm, PostForm
+from models import *
 
 __author__ = 'ruipacheco'
 __version__ = '0.1'
+
+
+def latest_visible_topics():
+    """
+    Returns a list with the latest visible topics.
+    :return: [Topic]
+    """
+    topics = Topic.query.order_by(Topic.date_created).limit(100).all()
+    return topics
+
+
+@flask.route('/rss')
+def rss():
+    """
+    Creates an RSS feed with all the items in the homepage.
+    """
+    form = {
+        'title': 'Fruitshow',
+        'hostname': urlparse(request.url_root).hostname,
+        'time': time.strftime("%Y/%m/%d %H:%M:%S"),
+        'description': 'Fruitshow'
+    }
+    topics = latest_visible_topics()
+    return render_template('rss.txt', topics=topics, form=form)
 
 
 @flask.route('/')
@@ -15,7 +41,7 @@ def index():
     """
     Home page of the forum. Prints topics in lists of 100, along with a search box and a link to create a new topic.
     """
-    topics = Topic.query.order_by(Topic.date_created).limit(100).all()
+    topics = latest_visible_topics()
     return render_template('index.html', topics=topics)
 
 

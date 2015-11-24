@@ -5,7 +5,7 @@
     <ol class="homepage">
         {% for topic in topics %}
             <li><a href="{{ url_for('view_topic', topic_id=topic.id) }}">
-                {{ topic.subject }}&nbsp;<em>{{ topic.first_post.name }}</em>&nbsp;({{topic.posts|length}})
+                {{ topic.subject|safe }}&nbsp;<em>{{ topic.first_post.name|safe }}</em>&nbsp;({{topic.posts|length}})
             </a></li>
         {% endfor %}
     </ol>

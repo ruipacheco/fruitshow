@@ -4,28 +4,28 @@
 {% block content %}
 
     <section>
-        <h3 id="{{ topic.id }}">{{ topic.subject }}</h3>
+        <h3 id="{{ topic.id|safe }}">{{ topic.subject|safe }}</h3>
         {% for post in topic.posts %}
             <article>
-                {{ post.message }}
+                {{ post.message|safe }}
                 <footer>
                     <p style="font-style:italic">
-                        {{ post.name }}<br />
+                        {{ post.name|safe }}<br/>
                         {{ post.date_created.strftime('%Y-%m-%d %H:%m') }}<br />
                     </p>
                 </footer>
             </article>
         {% endfor %}
         <form method="POST" action="{{ url_for('view_topic', topic_id=topic.id) }}">
-        <fieldset>
-            <dl>
-                {{ render_field(form.message) }}
-                {{ render_field(form.name) }}
-                {{ render_field(form.email) }}
-            </dl>
-            <button type="submit">Submit</button>
-        </fieldset>
-    </form>
+            <fieldset>
+                <dl>
+                    {{ render_field(form.message) }}
+                    {{ render_field(form.name) }}
+                    {{ render_field(form.email) }}
+                </dl>
+                <button type="submit">Submit</button>
+            </fieldset>
+        </form>
     </section>
 
 {% endblock %}

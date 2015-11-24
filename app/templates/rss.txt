@@ -1,0 +1,17 @@
+<rss version="2.0">
+	<channel>
+		<title>{{ form['title'] }}</title>
+		<link>http://{{ form['hostname'] }}</link>
+		<description>{{ form['description'] }}</description>
+		<pubDate>{{ form['time'] }}</pubDate>
+		<generator>FruitShow 0.2</generator>
+		{% for topic in topics %}
+		<item>
+			<title>{{ topic.subject|safe }}</title>
+			<link>http://{{ form['hostname'] }}{{ url_for('view_topic', topic_id=topic.id) }}</link>
+			<description>{{ topic.first_post.name|safe }}</description>
+			<pubDate>{{ topic.date_created.strftime('%Y-%m-%d %H:%m') }}</pubDate>
+		</item>
+		{% endfor %}
+	</channel>
+</rss>

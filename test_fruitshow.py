@@ -73,7 +73,7 @@ class TestFunctional(AbstractTest):
 
     @classmethod
     def teardown_class(cls):
-        db.session.execute('truncate "Topic" cascade')
+        # db.session.execute('truncate "Topic" cascade')
         db.session.commit()
 
     def test_index_page(self, client):
@@ -107,7 +107,6 @@ class TestFunctional(AbstractTest):
             'message': u'A second message',
             'name': u'A second name'
         }
-        import ipdb; ipdb.set_trace()
         result = client.post('/topic/%s' % topic_id, follow_redirects=True, data=data,
                              environ_base={'REMOTE_ADDR': '127.0.0.1'})
         assert result.status_code == 200
