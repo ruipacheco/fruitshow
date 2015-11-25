@@ -58,22 +58,22 @@ class TestFunctional(AbstractTest):
 
     @classmethod
     def setup_class(cls):
-        for i in range(0, 220):
+        for i in range(0, 300):
             topic = Topic(subject=u'Topic %i' % i)
             post = Post(message=u'First Post!', ip_address=u'127.0.0.1', name=u'Poster %i' % i,
                         email=u'email%i@email' % i)
             topic.first_post = post
             post.topic = topic
-            for j in range(1, 26):
+            for j in range(1, 25):
                 post = Post(message=u'Post %i' % j, ip_address=u'127.0.0.1', name=u'Poster %i' % j,
                             email=u'email%i@email' % j)
                 post.topic = topic
             db.session.add(topic)
-            db.session.commit()
+        db.session.commit()
 
     @classmethod
     def teardown_class(cls):
-        # db.session.execute('truncate "Topic" cascade')
+        db.session.execute('truncate "Topic" cascade')
         db.session.commit()
 
     def test_index_page(self, client):
@@ -112,3 +112,12 @@ class TestFunctional(AbstractTest):
         assert result.status_code == 200
         article = self.get_element(result.data, 'article')[1]
         assert u'A second message' in article.text
+
+    def test_list_all_years_in_archive(self, client):
+        pass
+
+    def test_list_all_months_in_archive_per_year(self, client):
+        pass
+
+    def test_list_topics_in_month_in_archive(self, client):
+        pass

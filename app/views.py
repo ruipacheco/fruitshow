@@ -39,7 +39,7 @@ def rss():
 @flask.route('/')
 def index():
     """
-    Home page of the forum. Prints topics in lists of 100, along with a search box and a link to create a new topic.
+    Home page of the forum. Displays the first 100 topics ordered by creation date.
     """
     topics = latest_visible_topics()
     return render_template('index.html', topics=topics)
@@ -48,7 +48,7 @@ def index():
 @flask.route('/topic/<int:topic_id>', methods=['GET', 'POST'])
 def view_topic(topic_id):
     """
-    Displays a thread with all its posts.
+    Displays a Topic with all its posts.
     :param topic_id:
     :type topic_id: int
     """
@@ -62,14 +62,14 @@ def view_topic(topic_id):
                         email=form.email.data)
             post.topic = topic
             db.session.commit()
-        return redirect(url_for('view_topic', topic_id=topic.id))
+        return redirect(url_for('view_topic', topic_id=topic_id))
     return render_template('topic.html', topic=topic, form=form)
 
 
 @flask.route('/topic/new', methods=['GET', 'POST'])
 def new_topic():
     """
-    Starts a new thread creating a new Topic in the database.
+    Starts a new thread creating a new Topic and corresponding first Post in the database.
     """
     form = TopicForm(request.form)
     if form.validate_on_submit():
@@ -82,3 +82,18 @@ def new_topic():
         db.session.commit()
         return redirect(url_for('view_topic', topic_id=topic.id))
     return render_template('new_topic.html', form=form)
+
+
+@flask.route('/archive/<int:year>/<int:month>')
+def archives(year=0, month=0):
+    """
+    Shows archived threads, meaning all threads sorted by year and month.
+    If no year is passed, then a list of all the years for which we have archived topics is displayed.
+    If a year is passed, a list of all the months for which there are archived topics is displayed.
+    If a month is passed, we show all archived topics for that month.
+    :param year:
+    :type year: int
+    :param month:
+    :type month: int
+    """
+    pass
