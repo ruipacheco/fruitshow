@@ -30,6 +30,15 @@ class AbstractTest(object):
 
     __metaclass__ = ABCMeta
 
+    @classmethod
+    def setup_class(cls):
+        pass
+
+    @classmethod
+    def teardown_class(cls):
+        db.session.execute('truncate "Topic" cascade')
+        db.session.commit()
+
     def get_element(self, html, element):
         parsed_html = PyQuery(html)
         element = parsed_html(element)
@@ -73,11 +82,6 @@ class TestGETFunctional(AbstractTest):
             db.session.add(topic)
         db.session.commit()
 
-    @classmethod
-    def teardown_class(cls):
-        db.session.execute('truncate "Topic" cascade')
-        db.session.commit()
-
     def test_index_page(self, client):
         result = client.get('/')
         assert result.status_code == 200
@@ -101,14 +105,6 @@ class TestGETFunctional(AbstractTest):
 
 
 class TestPOSTFunctional(AbstractTest):
-    @classmethod
-    def setup_class(cls):
-        pass
-
-    @classmethod
-    def teardown_class(cls):
-        db.session.execute('truncate "Topic" cascade')
-        db.session.commit()
 
     def test_create_new_thread(self, client):
         data = {
