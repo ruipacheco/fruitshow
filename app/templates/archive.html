@@ -2,8 +2,34 @@
 
 {% block content %}
 
-<section>
 
-</section>
+<h3>
+    <a href="{{ url_for('archive') }}">Archive</a>
+    {% if year > 0 %}>> <a href="{{ url_for('archive', year=year) }}">{{ year }}</a>{% endif %}
+    {% if month > 0 %}>> {{ month }}{% endif %}
+</h3>
+<ul>
+    {% for element in elements %}
+
+    {% if year == 0 and month == 0 %}
+    <li><a href="{{ url_for('archive', year=element) }}">{{ element|safe }}</a></li>
+    {% endif %}
+
+    {% if year > 0 and month == 0 %}
+    <li><a href="{{ url_for('archive', year=year, month=element) }}">{{ element|safe }}</a></li>
+    {% endif %}
+
+    {% if year > 0 and month > 0 %}
+    <li class="topic">
+        <a href="{{ url_for('view_topic', topic_id=element.id) }}">
+            {{ element.subject|safe }}&nbsp;
+            <em>{{ element.first_post.name|safe }}</em>&nbsp;
+            ({{element.posts|length}})
+        </a>
+    </li>
+    {% endif %}
+
+    {% endfor %}
+</ul>
 
 {% endblock %}

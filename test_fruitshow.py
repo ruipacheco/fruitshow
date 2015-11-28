@@ -27,6 +27,7 @@ def client(request):
 
 @pytest.mark.usefixtures("client")
 class AbstractTest(object):
+
     __metaclass__ = ABCMeta
 
     def get_element(self, html, element):
@@ -54,11 +55,12 @@ class AbstractTest(object):
             assert element.attr(key) == attributes[key]
 
 
-class TestFunctional(AbstractTest):
+class TestGETFunctional(AbstractTest):
 
     @classmethod
     def setup_class(cls):
-        for i in range(0, 300):
+        cls.total_topics = 300
+        for i in range(0, cls.total_topics):
             topic = Topic(subject=u'Topic %i' % i)
             post = Post(message=u'First Post!', ip_address=u'127.0.0.1', name=u'Poster %i' % i,
                         email=u'email%i@email' % i)
@@ -79,8 +81,37 @@ class TestFunctional(AbstractTest):
     def test_index_page(self, client):
         result = client.get('/')
         assert result.status_code == 200
-        lists = self.get_element(result.data, 'li')
+        lists = self.get_element(result.data, 'li.topic')
         assert len(lists) == 100
+
+    def test_list_all_years_in_archive(self, client):
+        result = client.get('/archive', follow_redirects=True, environ_base={'REMOTE_ADDR': '127.0.0.1'})
+        link = self.get_element(result.data, 'a')[1]
+        assert link.attrib['href'] == '/archive/2015'
+
+    def test_list_all_months_in_archive_per_year(self, client):
+        result = client.get('/archive/2015', follow_redirects=True, environ_base={'REMOTE_ADDR': '127.0.0.1'})
+        link = self.get_element(result.data, 'a')[2]
+        assert link.attrib['href'] == '/archive/2015/11'
+
+    def test_list_topics_in_month_in_archive(self, client):
+        """
+        We add 2 to the total number of Topics created during setup to account for topics created during other tests
+        """
+        result = client.get('/archive/2015/11', follow_redirects=True, environ_base={'REMOTE_ADDR': '127.0.0.1'})
+        li = self.get_element(result.data, 'li.topic')
+        assert len(li) == TestGETFunctional.total_topics
+
+
+class TestPOSTFunctional(AbstractTest):
+    @classmethod
+    def setup_class(cls):
+        pass
+
+    @classmethod
+    def teardown_class(cls):
+        db.session.execute('truncate "Topic" cascade')
+        db.session.commit()
 
     def test_create_new_thread(self, client):
         data = {
@@ -112,12 +143,3 @@ class TestFunctional(AbstractTest):
         assert result.status_code == 200
         article = self.get_element(result.data, 'article')[1]
         assert u'A second message' in article.text
-
-    def test_list_all_years_in_archive(self, client):
-        pass
-
-    def test_list_all_months_in_archive_per_year(self, client):
-        pass
-
-    def test_list_topics_in_month_in_archive(self, client):
-        pass

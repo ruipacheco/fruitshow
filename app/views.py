@@ -7,6 +7,7 @@ from app import flask
 from flask import render_template, abort, request, redirect, url_for
 from forms import TopicForm, PostForm
 from models import *
+from sqlalchemy import func, distinct
 
 __author__ = 'ruipacheco'
 __version__ = '0.1'
@@ -84,16 +85,33 @@ def new_topic():
     return render_template('new_topic.html', form=form)
 
 
+@flask.route('/archive/')
+@flask.route('/archive/<int:year>')
 @flask.route('/archive/<int:year>/<int:month>')
-def archives(year=0, month=0):
+def archive(year=0, month=0):
     """
     Shows archived threads, meaning all threads sorted by year and month.
     If no year is passed, then a list of all the years for which we have archived topics is displayed.
     If a year is passed, a list of all the months for which there are archived topics is displayed.
     If a month is passed, we show all archived topics for that month.
+
+    @todo Need to pass the timezone to the extract() function.
+
     :param year:
     :type year: int
     :param month:
     :type month: int
     """
-    pass
+    if year > 0 and month > 0:
+        elements = Topic.query.filter(func.extract('YEAR', Topic.date_created) == year,
+                                      func.extract('MONTH', Topic.date_created) == month).all()
+    else:
+        if year > 0 and month == 0:
+            results = db.session.query(distinct(func.extract('MONTH', Topic.date_created))). \
+                filter(func.extract('YEAR', Topic.date_created) == year).all()
+        if year == 0 and month == 0:
+            results = db.session.query(distinct(func.extract('YEAR', Topic.date_created))).all()
+        elements = []
+        for result in results:
+            elements.append(int(result[0]))
+    return render_template('archive.html', elements=elements, year=year, month=month)
