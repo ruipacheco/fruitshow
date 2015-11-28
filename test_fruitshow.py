@@ -95,9 +95,6 @@ class TestGETFunctional(AbstractTest):
         assert link.attrib['href'] == '/archive/2015/11'
 
     def test_list_topics_in_month_in_archive(self, client):
-        """
-        We add 2 to the total number of Topics created during setup to account for topics created during other tests
-        """
         result = client.get('/archive/2015/11', follow_redirects=True, environ_base={'REMOTE_ADDR': '127.0.0.1'})
         li = self.get_element(result.data, 'li.topic')
         assert len(li) == TestGETFunctional.total_topics
