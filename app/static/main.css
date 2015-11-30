@@ -1,5 +1,26 @@
-html, body {height: 100%;}
+html, body {
+    height: 100%;
+}
 
-ol.homepage {
+ul {
     list-style-type:none;
 }
+
+li.topic span {
+    color: grey;
+}
+
+form fieldset {
+    border: 0px;
+}
+
+form fieldset dl dt {
+    float:left;
+    margin-right:50px;
+    background-color:yellow;
+}
+
+.l-box {
+    padding: 0.5em;
+}
+

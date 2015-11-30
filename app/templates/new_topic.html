@@ -3,17 +3,18 @@
 {% from "_macros.html" import render_field %}
 {% block content %}
 
-    <form method="POST" action="{{ url_for('new_topic') }}">
+<form method="POST" action="{{ url_for('new_topic') }}" class="pure-form pure-form-aligned">
         <fieldset>
-            <dl>
-                {{ form.hidden_tag() }}
-                {{ render_field(form.subject) }}
-                {{ render_field(form.message) }}
-                {{ render_field(form.name) }}
-                {{ render_field(form.email) }}
-                {{ render_field(form.remember_me) }}
-            </dl>
-            <button type="submit">Submit</button>
+            {{ form.hidden_tag() }}
+            {{ render_field(form.subject) }}
+            {{ render_field(form.message) }}
+            {{ render_field(form.name) }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.remember_me) }}
+            <div class="pure-control-group">
+                <label></label>
+                <button type="submit" class="pure-button pure-button-primary">Submit</button>
+            </div>
         </fieldset>
     </form>
 

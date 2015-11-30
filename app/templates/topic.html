@@ -16,14 +16,13 @@
                 </footer>
             </article>
         {% endfor %}
-        <form method="POST" action="{{ url_for('view_topic', topic_id=topic.id) }}">
+        <form method="POST" action="{{ url_for('view_topic', topic_id=topic.id) }}"
+              class="pure-form pure-form-stacked">
             <fieldset>
-                <dl>
-                    {{ render_field(form.message) }}
-                    {{ render_field(form.name) }}
-                    {{ render_field(form.email) }}
-                </dl>
-                <button type="submit">Submit</button>
+                {{ render_field(form.message) }}
+                {{ render_field(form.name) }}
+                {{ render_field(form.email) }}
+                <button type="submit" class="pure-button pure-button-primary">Submit</button>
             </fieldset>
         </form>
     </section>

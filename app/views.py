@@ -4,6 +4,7 @@ import time
 from urlparse import urlparse
 
 from app import flask
+from config import ForumConfiguration
 from flask import render_template, abort, request, redirect, url_for
 from forms import TopicForm, PostForm
 from models import *
@@ -18,7 +19,7 @@ def latest_visible_topics():
     Returns a list with the latest visible topics.
     :return: [Topic]
     """
-    topics = Topic.query.order_by(Topic.date_created).limit(100).all()
+    topics = Topic.query.order_by(Topic.date_created, Topic.id).limit(ForumConfiguration.MAX_POSTS_INDEX_PAGE).all()
     return topics
 
 
@@ -28,10 +29,10 @@ def rss():
     Creates an RSS feed with all the items in the homepage.
     """
     form = {
-        'title': 'Fruitshow',
+        'title': ForumConfiguration.FORUM_NAME,
         'hostname': urlparse(request.url_root).hostname,
         'time': time.strftime("%Y/%m/%d %H:%M:%S"),
-        'description': 'Fruitshow'
+        'description': ForumConfiguration.FORUM_NAME
     }
     topics = latest_visible_topics()
     return render_template('rss.txt', topics=topics, form=form)
@@ -107,11 +108,11 @@ def archive(year=0, month=0):
                                       func.extract('MONTH', Topic.date_created) == month).all()
     else:
         if year > 0 and month == 0:
-            results = db.session.query(distinct(func.extract('MONTH', Topic.date_created))). \
-                filter(func.extract('YEAR', Topic.date_created) == year).all()
+            results = db.session.query(distinct(func.extract('MONTH', Topic.date_created))) \
+                .filter(func.extract('YEAR', Topic.date_created) == year)
         if year == 0 and month == 0:
-            results = db.session.query(distinct(func.extract('YEAR', Topic.date_created))).all()
+            results = db.session.query(distinct(func.extract('YEAR', Topic.date_created)))
         elements = []
-        for result in results:
+        for result in results.all():
             elements.append(int(result[0]))
     return render_template('archive.html', elements=elements, year=year, month=month)

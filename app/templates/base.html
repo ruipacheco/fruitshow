@@ -2,13 +2,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Fruitshow</title>
-		<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+        <title></title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css') }}">
         <!--[if lte IE 8]>
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-old-ie-min.css') }}">
         <![endif]-->
         <!--[if gt IE 8]><!-->
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css') }}">
         <!--<![endif]-->
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 		<!--[if lt IE 9]>
@@ -16,11 +16,26 @@
 		<![endif]-->
 	</head>
 	<body>
-		<header></header>
-		<div class="pure-g-r">
-            {% block content %}
+    <header>
+        {% block header %}
             {% endblock %}
+    </header>
+    <div class="pure-g">
+        <div class="pure-u-1-4 pure-u-sm-1-4">
+            <div class="l-box">
+
+            </div>
+        </div>
+        <div class="pure-u-3-4 pure-u-sm-3-4">
+            <div class="l-box">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
 		</div>
-		<footer></footer>
+    <footer>
+        {% block footer %}
+        {% endblock %}
+    </footer>
 	</body>
 </html>
