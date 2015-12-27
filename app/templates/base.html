@@ -1,41 +1,30 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css') }}">
-        <!--[if lte IE 8]>
-        <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-old-ie-min.css') }}">
-        <![endif]-->
-        <!--[if gt IE 8]><!-->
-        <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css') }}">
-        <!--<![endif]-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='primer.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-		<!--[if lt IE 9]>
-		<script src="{{ url_for('static', filename='html5shiv.min.js') }}"></script>
-		<![endif]-->
 	</head>
 	<body>
-    <header>
-        {% block header %}
-            {% endblock %}
-    </header>
-    <div class="pure-g">
-        <div class="pure-u-1-4 pure-u-sm-1-4">
-            <div class="l-box">
-
+    <div class="container">
+        <div class="columns">
+            <div class="one-fifth column">
+                <nav class="menu">
+                    <h3 class="menu-heading">Fruitshow</h3>
+                    <ul>
+                        <li><a class="menu-item selected" href="#">Something</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="four-fifths column">
+                <main>
+                    {% block content %}
+                    {% endblock %}
+                </main>
             </div>
         </div>
-        <div class="pure-u-3-4 pure-u-sm-3-4">
-            <div class="l-box">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
-		</div>
-    <footer>
-        {% block footer %}
-        {% endblock %}
-    </footer>
-	</body>
+    </div>
+    </body>
 </html>

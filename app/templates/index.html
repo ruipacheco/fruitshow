@@ -10,6 +10,15 @@
         <span>({{topic.posts|length}} comments)</span>
     </li>
     {% endfor %}
+
+    <div class="columns">
+        <div class="one-half column">
+            <a class="btn btn-sm btn-outline" href="{{ url_for('new_topic') }}">New Topic</a>
+        </div>
+        <div class="one-half column">
+            <a class="btn btn-sm btn-outline" href="{{ url_for('archive') }}">Archive</a>
+        </div>
+  </div>
 </ul>
 
 {% endblock %}
